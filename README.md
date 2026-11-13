@@ -26,3 +26,10 @@ This library makes one focused choice: it escapes for the **double-quoted** form
 - **Plain-scalar detection is intentionally conservative.** `isSafeFlowPlain` may return `false` for strings that a given YAML emitter would happily emit plain. False negatives are acceptable; false positives are not. Do not file bugs asking us to relax the predicate — extend it in your own wrapper if your downstream parser is more permissive.
 
 The package exports three names: `escapeFlowScalar` (the main entry point, picks plain-or-quoted automatically), `escapeFlowDoubleQuoted` (always double-quoted, with escapes), and `isSafeFlowPlain` (the strict predicate). All expect a single string argument and throw `TypeError` on non-string input.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
